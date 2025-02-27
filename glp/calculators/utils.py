@@ -11,8 +11,7 @@ from glp.periodic import make_displacement
 def strain_system(system, strain):
     strained_R = system.R + jnp.einsum("ab,ib->ia", strain, system.R)
     strained_cell = system.cell + jnp.einsum("ab,bA->aA", strain, system.cell)
-    return System(strained_R, system.Z, strained_cell)
-
+    return System(strained_R, system.Z, strained_cell, system.total_charge, system.num_unpaired_electrons)
 
 def strain_unfolded_system(system, strain):
     strained_R = system.R + jnp.einsum("ab,ib->ia", strain, system.R)
@@ -29,7 +28,9 @@ def strain_unfolded_system(system, strain):
 
 def strain_graph(graph, strain):
     strained_edges = graph.edges + jnp.einsum("ab,ib->ia", strain, graph.edges)
-    return Graph(strained_edges, graph.nodes, graph.centers, graph.others, graph.mask)
+    strained_edges_lr = graph.edges_lr + jnp.einsum("ab,ib->ia", strain, graph.edges_lr)
+    return Graph(graph.positions, strained_edges, graph.nodes, graph.centers, graph.others, graph.mask, graph.total_charge, graph.num_unpaired_electrons,
+                 strained_edges_lr, graph.idx_i_lr, graph.idx_j_lr, graph.cell, graph.ngrid, graph.alpha, graph.frequency)
 
 
 def get_strain(dtype=jnp.float32):
