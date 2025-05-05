@@ -47,7 +47,7 @@ def unfold_system(system, unfolding):
     mask = jnp.arange(all_R.shape[0]) < N
     padding_mask = jnp.concatenate((jnp.ones(N, dtype=bool), unfolding.padding_mask))
 
-    return UnfoldedSystem(all_R, all_Z, system.total_charge, system.num_unpaired_electrons, None, mask, all_idx, padding_mask, unfolding.updated)
+    return UnfoldedSystem(all_R, all_Z, None, system.total_charge, system.num_unpaired_electrons, mask, all_idx, padding_mask, unfolding.updated)
 
 
 def to_displacement(system):
